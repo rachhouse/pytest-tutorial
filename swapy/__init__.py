@@ -1,1 +1,2 @@
-from .swapy_request import SwapyRequest
+from .swapy import Swapy
+from .swapy_base import SwapyBase, SwapyException
