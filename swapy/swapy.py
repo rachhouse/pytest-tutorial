@@ -1,3 +1,6 @@
+import pathlib
+import sqlite3
+
 from typing import Dict, List
 
 from .swapy_base import SwapyException, SwapyBase

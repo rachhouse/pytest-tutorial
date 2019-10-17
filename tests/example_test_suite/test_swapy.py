@@ -11,7 +11,7 @@ def test_object_init():
     assert swapy._wookiee == False, 'default wookiee setting should be false'
 
 
-def test_get_all_available_resources():
+def test_get_all_available_resources(mock_swapi_connection):
     swapy = Swapy()
 
     assert swapy._swapi_resource_list == None
@@ -30,6 +30,7 @@ def test_get_all_available_resources():
 
 
 def test_validate_resource():
+    '''Test validate_resource correctly identifies valid and invalid swapi resources'''
 
     swapy = Swapy()
 

@@ -51,6 +51,7 @@ class SwapyBase:
 
     def _make_request(self, request_url: SwapiURLType) -> SwapiJSON:
 
+        print('Requesting {}'.format(request_url))
         response = requests.get(request_url)
 
         if response.status_code != 200:
