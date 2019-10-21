@@ -12,6 +12,11 @@ SWAPI_BASE_REGEX = re.compile(re.escape(BASE_URL))
 SWAPI_RESOURCES = ['films', 'people', 'planets', 'species', 'starships', 'vehicles']
 
 
+@pytest.fixture()
+def swapi_base_url():
+    return BASE_URL
+
+
 class MockSwapiResponse:
     '''Mocks a HTTP response object from swapi'''
 
@@ -19,6 +24,9 @@ class MockSwapiResponse:
         if SWAPI_BASE_REGEX.match(request_url):
             self.status_code = 200
             self._set_content(request_url)
+        elif re.compile(r"mock_bad_json").match(request_url):
+            self.status_code = 200
+            self.content = '{ this is gibberish }'
         else:
             self.status_code = 500
 
@@ -46,7 +54,21 @@ class MockSwapiResponse:
 
 @pytest.fixture()
 def mock_swapi_connection(monkeypatch):
+    '''Override requests.get to return mocked swapi content'''
+
     def generate_mock_swapi_response(request_url):
         return MockSwapiResponse(request_url)
 
     monkeypatch.setattr(requests, 'get', generate_mock_swapi_response)
+
+
+@pytest.fixture()
+def expected_swapi_resources():
+    '''Generate list of expected swapi resources'''
+
+    expected_swapi_resources = {}
+
+    for resource_key in SWAPI_RESOURCES:
+        expected_swapi_resources[resource_key] = '{}/{}/'.format(BASE_URL, resource_key)
+
+    return expected_swapi_resources

@@ -29,7 +29,7 @@ class Swapy(SwapyBase):
     def _validate_resource(self, resource: str) -> None:
         '''Throws exception if resource is not a valid swapi resource'''
         if resource not in self.get_all_available_resources():
-            raise SwapyException('bad resource')
+            raise SwapyException('bad swapi resource')
 
     def get_resource_schema(self, resource: str) -> Dict:
         '''Return schema for swapi resource'''
