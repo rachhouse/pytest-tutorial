@@ -1,6 +1,3 @@
-import pathlib
-import sqlite3
-
 from typing import Dict, List
 
 from .swapy_base import SwapyException, SwapyBase
@@ -42,6 +39,8 @@ class Swapy(SwapyBase):
         return resource_schema
 
     def get_resource_id(self, resource: str, resource_id: int) -> Dict:
+        '''Return specific swapi resource identified by resource_id'''
+
         self._validate_resource(resource)
 
         resource_url = self._assemble_swapi_url(resource, resource_id)

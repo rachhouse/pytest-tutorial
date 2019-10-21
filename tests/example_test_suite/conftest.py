@@ -1,7 +1,10 @@
 import json
+import os
 import pytest
 import re
 import requests
+
+from distutils import dir_util
 
 BASE_URL = 'https://swapi.co/api'
 
@@ -72,3 +75,18 @@ def expected_swapi_resources():
         expected_swapi_resources[resource_key] = '{}/{}/'.format(BASE_URL, resource_key)
 
     return expected_swapi_resources
+
+
+@pytest.fixture()
+def datadir(tmpdir, request):
+    """Method to make test data files available to pytest at test runtime"""
+
+    # get filename of current test file, and look for data directory of same name
+    filename = request.module.__file__
+    test_dir, _ = os.path.splitext(filename)
+
+    # if the filename is a directory, copy all files in directory to tmpdir
+    if os.path.isdir(test_dir):
+        dir_util.copy_tree(test_dir, str(tmpdir))
+
+    return tmpdir
