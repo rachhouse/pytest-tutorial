@@ -1,8 +1,7 @@
 import json
-import re
 import requests
 
-from typing import Dict, Optional, Tuple
+from typing import Dict, Optional
 
 # custom types
 SwapiURL = str
@@ -25,32 +24,28 @@ class SwapyBase:
         self._wookiee = wookiee
 
     def _assemble_swapi_url(
-        self, resource: Optional[str] = None, resource_id: Optional[int] = None
+        self,
+        resource: Optional[str] = None,
+        resource_id: Optional[int] = None,
+        schema: Optional[bool] = False,
     ) -> SwapiURL:
-        '''Return URL for swapi api request based on optional resource/resource id'''
+        '''Return URL for swapi api request based on optional resource/resource id/schema'''
 
+        # default to returning swapi base url
         url = BASE_URL
 
-        if (resource is not None) and (resource_id is not None):
-            url = '{}/{}/{}/'.format(BASE_URL, resource, resource_id)
-        elif (resource is not None) or (resource_id is not None):
+        if schema == True:
             url = '{}/{}/schema'.format(BASE_URL, resource)
+        elif (resource is not None) and (resource_id is not None):
+            url = '{}/{}/{}/'.format(BASE_URL, resource, resource_id)
+        elif (resource is not None) and (resource_id is None):
+            url = '{}/{}/'.format(BASE_URL, resource)
 
         if self._wookiee:
             url = url + '?format=wookiee'
 
         return url
 
-    def _decode_swapi_url(self, url: SwapiURL) -> Tuple[str, int]:
-        '''Extract resource and resource id from a swapi url'''
-
-        expected_url_format = re.compile(re.escape(BASE_URL) + r"\/(\w+)\/(\d+)\/*")
-
-        if not expected_url_format.match(url):
-            raise SwapyException('bad swapi url format')
-
-        match = expected_url_format.match(url)
-        return match.group(1), int(match.group(2))
 
     def _make_request(self, request_url: SwapiURL) -> SwapiResponse:
         '''Query swapi with input request_url, format response content into dict'''
@@ -67,7 +62,8 @@ class SwapyBase:
         response = requests.get(request_url)
 
         if response.status_code != 200:
-            raise SwapyException('swapi returned a non-200 HTTP status code')
+            print(response)
+            raise SwapyException('swapi returned a non-200 HTTP status code: {}'.format(response.status_code))
 
         return response.content
 

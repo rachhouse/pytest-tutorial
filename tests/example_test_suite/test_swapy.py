@@ -10,8 +10,8 @@ def test_object_init():
     assert swapy._wookiee == False, 'default wookiee setting should be false'
 
 
-def test_get_all_available_resources(mock_swapi_connection, expected_swapi_resources):
-    '''Test that get_all_available_resources call a) returns the correct resources
+def test_get_all_resource_types(mock_swapi_connection, expected_swapi_resources):
+    '''Test that get_all_resource_types call a) returns the correct resources
     and b) caches the results in the Swapy object'''
 
     swapy = Swapy()
@@ -21,7 +21,7 @@ def test_get_all_available_resources(mock_swapi_connection, expected_swapi_resou
     all_expected_resources = list(expected_swapi_resources.keys())
     all_expected_resources.sort()
 
-    assert swapy.get_all_available_resources() == all_expected_resources
+    assert swapy.get_all_resource_types() == all_expected_resources
     assert swapy._swapi_resource_list == all_expected_resources
 
 
@@ -38,3 +38,24 @@ def test_validate_resource(mock_swapi_connection):
             swapy._validate_resource(invalid_resource) == None
 
         assert str(swapy_exception.value) == 'bad swapi resource'
+
+
+@pytest.mark.live
+def test_get_me_a_schema():
+
+    swapy = Swapy()
+    # thing = swapy.get_resource_schema('vehicles')
+    thing = swapy.get_resource_id('planets', 1)
+
+    from pprint import pprint
+    pprint(thing)
+
+    assert 1 == 0
+
+# @pytest.mark.live
+# def test_get_all_resources_of_type():
+
+#     swapy = Swapy()
+#     things = swapy.get_all_resources_of_type('films')
+
+#     assert 1 == 0
