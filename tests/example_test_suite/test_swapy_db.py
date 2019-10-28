@@ -30,7 +30,7 @@ def test_object_init(mock_swapy_cache_dir, tmpdir, mock_swapi_connection):
     assert os.path.exists(expected_swapy_db_path)
 
 
-def test_decode_swapi_url_valid():
+def test_decode_swapi_url_valid(mock_swapy_cache_dir):
     '''Test that resource info can be extracted from valid swapi urls'''
 
     swapydb = SwapyDB()
@@ -54,7 +54,7 @@ def test_decode_swapi_url_valid():
         assert resource_id == test_cases[id]['expected_resource_id']
 
 
-def test_decode_swapi_url_invalid():
+def test_decode_swapi_url_invalid(mock_swapy_cache_dir):
     '''Test that decoding an invalid swapi url throws an error'''
 
     swapydb = SwapyDB()
@@ -65,43 +65,47 @@ def test_decode_swapi_url_invalid():
     assert str(swapy_exception.value) == 'bad swapi url format'
 
 
-def test_stuff(expected_swapi_resources, datadir, mock_swapi_connection):
+def test_schema_creation_and_resource_insertion(
+    mock_swapy_cache_dir, expected_swapi_resources, datadir
+):
+    '''Test that schemas and resources are created/inserted correctly based on input schema json, 
+    and we don't get any sqlite errors'''
 
     swapydb = SwapyDB()
 
-    swapydb._deathstar()
-
-    # load sample schema
-    for resource in list(expected_swapi_resources.keys()):
+    # load example schemas
+    for resource_type in list(expected_swapi_resources.keys()):
         resource_schema_file = pathlib.Path(
-            datadir.join('swapi_{}_schema.json'.format(resource))
+            datadir.join('schemas/swapi_{}_schema.json'.format(resource_type))
         )
 
         with open(resource_schema_file, 'r') as fh:
             resource_schema = json.loads(fh.read())
 
-        swapydb._create_tables_for_resource(resource, resource_schema)
+        swapydb._create_tables_for_resource(resource_type, resource_schema)
 
-    test_thing_type = 'vehicles'
-    test_thing = {
-        'name': 'Sand Crawler',
-        'model': 'Digger Crawler',
-        'manufacturer': 'Corellia Mining Corporation',
-        'cost_in_credits': '150000',
-        'length': '36.8',
-        'max_atmosphering_speed': '30',
-        'crew': '46',
-        'passengers': '30',
-        'cargo_capacity': '50000',
-        'consumables': '2 months',
-        'vehicle_class': 'wheeled',
-        'pilots': [],
-        'films': ['https://swapi.co/api/films/5/', 'https://swapi.co/api/films/1/'],
-        'created': '2014-12-10T15:36:25.724000Z',
-        'edited': '2014-12-22T18:21:15.523587Z',
-        'url': 'https://swapi.co/api/vehicles/4/',
+    # insert example resources
+    for resource_type in list(expected_swapi_resources.keys()):
+        resource_file = pathlib.Path(
+            datadir.join('resources/swapi_example_{}.json'.format(resource_type))
+        )
+
+        with open(resource_file, 'r') as fh:
+            resource = json.loads(fh.read())
+
+        _, resource_id = swapydb._decode_swapi_url(resource['url'])
+
+        swapydb._insert_resource(resource, resource_type, resource_id)
+
+    test_queries = {
+        '1': {'query': 'select count(*) from films2characters;', 'expected_answer': 18},
+        '2': {'query': 'select count(*) from species;', 'expected_answer': 1},
     }
 
-    swapydb._insert_resource(test_thing, test_thing_type, 1)
+    for test in test_queries.keys():
+        query = test_queries[test]['query']
+        expected_answer = test_queries[test]['expected_answer']
 
-    assert 1 == 0
+        query_answer, _ = swapydb.run_query(query)
+
+        assert query_answer[0][0] == expected_answer

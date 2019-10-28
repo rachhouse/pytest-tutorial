@@ -41,15 +41,6 @@ def test_assemble_swapi_url(swapi_base_url):
     assert swapy_base_wookiee._assemble_swapi_url(resource, resource_id) == expected_url
 
 
-@pytest.mark.live
-def test_make_request(swapi_base_url, expected_swapi_resources):
-    '''Test live call to swapi'''
-
-    swapy_base = SwapyBase()
-    swapi_resources = swapy_base._make_request(swapi_base_url)
-    assert swapi_resources == expected_swapi_resources
-
-
 def test_make_request_errors(mock_swapi_connection):
     '''Test that swapi response problems raise exceptions'''
 
@@ -66,3 +57,12 @@ def test_make_request_errors(mock_swapi_connection):
         swapi_content = swapy_base._make_request('mock_bad_json')
 
     assert str(swapy_exception.value) == 'Could not parse swapi response content'
+
+
+@pytest.mark.live
+def test_make_request(swapi_base_url, expected_swapi_resources):
+    '''Test live call to swapi'''
+
+    swapy_base = SwapyBase()
+    swapi_resources = swapy_base._make_request(swapi_base_url)
+    assert swapi_resources == expected_swapi_resources

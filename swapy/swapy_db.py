@@ -3,16 +3,13 @@ import pathlib
 import re
 import sqlite3
 
-from typing import Dict, Optional, Tuple
+from typing import Dict, List, Optional, Tuple
 
 from .swapy_base import SwapyException
 
 SwapiURL = str
 
 BASE_URL = 'https://swapi.co/api'
-
-
-PEOPLE_COLUMN_ALIASES = ['characters', 'residents', 'pilots']
 
 
 class SwapyDB:
@@ -104,7 +101,10 @@ class SwapyDB:
         return create_table_statement, lookups
 
     def _insert_resource(
-        self, resource_object: Dict, resource_type: str, resource_id: Optional[int]
+        self,
+        resource_object: Dict,
+        resource_type: str,
+        resource_id: Optional[int] = None,
     ) -> None:
         '''Insert swapi resource data into swapy cache db,
         also insert relationship data in lookup tables'''
@@ -128,7 +128,7 @@ class SwapyDB:
             else:
                 column_values.append(resource_object[column])
 
-        insert_statement = 'insert into {} ({}) values ({});'.format(
+        insert_statement = 'insert or ignore into {} ({}) values ({});'.format(
             resource_type,
             ','.join(column_names),
             ','.join('"{}"'.format(v) for v in column_values),
@@ -154,7 +154,7 @@ class SwapyDB:
             map_to_ids = list(set(map_to_ids))
 
             for map_to_id in map_to_ids:
-                lookup_insert = 'insert into {} ({}, {}) values ({}, {});'.format(
+                lookup_insert = 'insert or ignore into {} ({}, {}) values ({}, {});'.format(
                     lookup, map_from, map_to, resource_id, map_to_id
                 )
                 self._cursor.execute(lookup_insert)
@@ -172,9 +172,10 @@ class SwapyDB:
         match = expected_url_format.match(url)
         return match.group(1), int(match.group(2))
 
-    # need a query method
-    # insert automatically into the db when you grab a resource
-    # always check cache first
-    # initial setup of cache should hit swapi for schemas
+    def run_query(self, query: str) -> Tuple[List[Tuple], List[str]]:
+        '''Run a query against swapy cache db, return data and headers'''
+        self._cursor.execute(query)
+        data = self._cursor.fetchall()
+        headers = [h[0] for h in self._cursor.description]
 
-    # add a method to download all swapi data to cache
+        return data, headers
