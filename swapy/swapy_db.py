@@ -106,6 +106,8 @@ class SwapyDB:
     def _insert_resource(
         self, resource_object: Dict, resource_type: str, resource_id: Optional[int]
     ) -> None:
+        '''Insert swapi resource data into swapy cache db,
+        also insert relationship data in lookup tables'''
 
         if resource_id is None:
             _, resource_id = self._decode_swapi_url(resource_object['url'])
@@ -133,6 +135,30 @@ class SwapyDB:
         )
 
         self._cursor.execute(insert_statement)
+
+        # get lookup tables
+        self._cursor.execute(
+            "select name from sqlite_master where type='table' and name like '{}2%';".format(
+                resource_type
+            )
+        )
+        lookup_tables = self._cursor.fetchall()
+        lookup_tables = [t[0] for t in lookup_tables]
+
+        for lookup in lookup_tables:
+            map_from, map_to = lookup.split('2')
+            map_to_urls = resource_object[map_to]
+            map_to_ids = [self._decode_swapi_url(u)[1] for u in map_to_urls]
+
+            # make sure we have a list of unique ids
+            map_to_ids = list(set(map_to_ids))
+
+            for map_to_id in map_to_ids:
+                lookup_insert = 'insert into {} ({}, {}) values ({}, {});'.format(
+                    lookup, map_from, map_to, resource_id, map_to_id
+                )
+                self._cursor.execute(lookup_insert)
+
         self._conn.commit()
 
     def _decode_swapi_url(self, url: SwapiURL) -> Tuple[str, int]:
@@ -146,5 +172,9 @@ class SwapyDB:
         match = expected_url_format.match(url)
         return match.group(1), int(match.group(2))
 
+    # need a query method
+    # insert automatically into the db when you grab a resource
+    # always check cache first
+    # initial setup of cache should hit swapi for schemas
 
-# verify resource_id exists in table
+    # add a method to download all swapi data to cache

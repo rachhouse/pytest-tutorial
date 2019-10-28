@@ -46,7 +46,6 @@ class SwapyBase:
 
         return url
 
-
     def _make_request(self, request_url: SwapiURL) -> SwapiResponse:
         '''Query swapi with input request_url, format response content into dict'''
 
@@ -62,8 +61,11 @@ class SwapyBase:
         response = requests.get(request_url)
 
         if response.status_code != 200:
-            print(response)
-            raise SwapyException('swapi returned a non-200 HTTP status code: {}'.format(response.status_code))
+            raise SwapyException(
+                'swapi returned a non-200 HTTP status code: {}'.format(
+                    response.status_code
+                )
+            )
 
         return response.content
 

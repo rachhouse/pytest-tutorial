@@ -82,35 +82,26 @@ def test_stuff(expected_swapi_resources, datadir, mock_swapi_connection):
 
         swapydb._create_tables_for_resource(resource, resource_schema)
 
-    test_film = {
-        "characters": [
-            "https://swapi.co/api/people/1/",
-            "https://swapi.co/api/people/1/",
-        ],
-        "created": "2014-12-10T14:23:31.880000Z",
-        "director": "George Lucas",
-        "edited": "2014-12-12T11:24:39.858000Z",
-        "episode_id": 4,
-        "opening_crawl": "It is a period of civil war.\n\nRebel spaceships, striking\n\nfrom a hidden base, have won\n\ntheir first victory against\n\nthe evil Galactic Empire.\n\n\n\nDuring the battle, Rebel\n\nspies managed to steal secret\r\nplans to the Empire's\n\nultimate weapon, the DEATH\n\nSTAR, an armored space\n\nstation with enough power\n\nto destroy an entire planet.\n\n\n\nPursued by the Empire's\n\nsinister agents, Princess\n\nLeia races home aboard her\n\nstarship, custodian of the\n\nstolen plans that can save her\n\npeople and restore\n\nfreedom to the galaxy....",
-        "planets": ["https://swapi.co/api/planets/1/"],
-        "producer": "Gary Kurtz, Rick McCallum",
-        "release_date": "1977-05-25",
-        "species": [
-            "https://swapi.co/api/species/1/",
-            "https://swapi.co/api/species/2/",
-        ],
-        "starships": [
-            "https://swapi.co/api/starships/2/",
-            "https://swapi.co/api/starships/3/",
-        ],
-        "title": "A New Hope",
-        "url": "https://swapi.co/api/films/1/",
-        "vehicles": [
-            "https://swapi.co/api/vehicles/4/",
-            "https://swapi.co/api/vehicles/5/",
-        ],
+    test_thing_type = 'vehicles'
+    test_thing = {
+        'name': 'Sand Crawler',
+        'model': 'Digger Crawler',
+        'manufacturer': 'Corellia Mining Corporation',
+        'cost_in_credits': '150000',
+        'length': '36.8',
+        'max_atmosphering_speed': '30',
+        'crew': '46',
+        'passengers': '30',
+        'cargo_capacity': '50000',
+        'consumables': '2 months',
+        'vehicle_class': 'wheeled',
+        'pilots': [],
+        'films': ['https://swapi.co/api/films/5/', 'https://swapi.co/api/films/1/'],
+        'created': '2014-12-10T15:36:25.724000Z',
+        'edited': '2014-12-22T18:21:15.523587Z',
+        'url': 'https://swapi.co/api/vehicles/4/',
     }
 
-    swapydb._insert_resource(test_film, 'films', 1)
+    swapydb._insert_resource(test_thing, test_thing_type, 1)
 
     assert 1 == 0

@@ -41,16 +41,17 @@ def test_validate_resource(mock_swapi_connection):
 
 
 @pytest.mark.live
-def test_get_me_a_schema():
+def test_get_me_a_some_sweet_data():
 
     swapy = Swapy()
-    # thing = swapy.get_resource_schema('vehicles')
-    thing = swapy.get_resource_id('planets', 1)
 
-    from pprint import pprint
-    pprint(thing)
+    # thing = swapy.get_resource_schema('vehicles')
+    thing = swapy.get_resource_id('vehicles', 4)
+
+    print(thing)
 
     assert 1 == 0
+
 
 # @pytest.mark.live
 # def test_get_all_resources_of_type():

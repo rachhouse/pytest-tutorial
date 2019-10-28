@@ -58,7 +58,9 @@ def test_make_request_errors(mock_swapi_connection):
     with pytest.raises(SwapyException) as swapy_exception:
         swapi_content = swapy_base._make_request('a terrible url')
 
-    assert str(swapy_exception.value) == 'swapi returned a non-200 HTTP status code'
+    assert (
+        str(swapy_exception.value) == 'swapi returned a non-200 HTTP status code: 500'
+    )
 
     with pytest.raises(SwapyException) as swapy_exception:
         swapi_content = swapy_base._make_request('mock_bad_json')
