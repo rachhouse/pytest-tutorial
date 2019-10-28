@@ -1,0 +1,84 @@
+{
+    "type": "object",
+    "required": [
+        "title",
+        "episode_id",
+        "opening_crawl",
+        "director",
+        "producer",
+        "release_date",
+        "characters",
+        "planets",
+        "starships",
+        "vehicles",
+        "species",
+        "url",
+        "created",
+        "edited"
+    ],
+    "properties": {
+        "characters": {
+            "type": "array",
+            "description": "The people resources featured within this film."
+        },
+        "planets": {
+            "type": "array",
+            "description": "The planet resources featured within this film."
+        },
+        "opening_crawl": {
+            "type": "string",
+            "description": "The opening crawl text at the beginning of this film."
+        },
+        "url": {
+            "format": "uri",
+            "type": "string",
+            "description": "The url of this resource"
+        },
+        "created": {
+            "format": "date-time",
+            "type": "string",
+            "description": "The ISO 8601 date format of the time that this resource was created."
+        },
+        "episode_id": {
+            "type": "integer",
+            "description": "The episode number of this film."
+        },
+        "director": {
+            "type": "string",
+            "description": "The director of this film."
+        },
+        "edited": {
+            "format": "date-time",
+            "type": "string",
+            "description": "the ISO 8601 date format of the time that this resource was edited."
+        },
+        "producer": {
+            "type": "string",
+            "description": "The producer(s) of this film."
+        },
+        "title": {
+            "type": "string",
+            "description": "The title of this film."
+        },
+        "starships": {
+            "type": "array",
+            "description": "The starship resources featured within this film."
+        },
+        "species": {
+            "type": "array",
+            "description": "The species resources featured within this film."
+        },
+        "release_date": {
+            "format": "date",
+            "type": "string",
+            "description": "The release date at original creator country."
+        },
+        "vehicles": {
+            "type": "array",
+            "description": "The vehicle resources featured within this film."
+        }
+    },
+    "title": "Film",
+    "description": "A Star Wars film",
+    "$schema": "http://json-schema.org/draft-04/schema"
+}
