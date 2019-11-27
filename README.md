@@ -15,7 +15,7 @@ The tutorial is divided into three main sections:
  This folder contains the code for a simple, but functional, API wrapper around [SWAPI](https://swapi.co/), the Star Wars API. 
 
 1. `tests/example_test_suite/`<br>
- This folder contains - you guessed it - an example test suite for the `swapy` library. Clearly, this is not the only, or most exhaustive, way to design and create a test suite for a chunk of code like `swapy`; however, it does reflect how I would develop a test suite for any similar, real-world library. The example test suite is intended to showcase how you can use `pytest` to build an understandable, maintainable, extensible (all the best `.*[a|i]bles`, really), and robust test suite, as well as highlight the use of goodies like monkeypatching, `conftest.py`, and `pytest.ini`. 
+ This folder contains - you guessed it - an example test suite for the `swapy` library. Clearly, this is not the only, or most exhaustive, way to design and create a test suite for a chunk of code like `swapy`; however, it does reflect how I would develop a test suite for any similar, real-world library. The example test suite is intended to showcase how you can use `pytest` to build an understandable, maintainable, extensible (all the best `.*(a|i)ble`s, really), and robust test suite, as well as highlight the use of goodies like monkeypatching, `conftest.py`, and `pytest.ini`. 
 
 1. `tests/test_tutorials/`<br>
  This folder contains a variety of subfolders which allow you to run smaller sets of test (or even a single test) to demonstrate various testing and pytest principles. At present, this is the section of the tutorial that needs the most work. It's still pretty lacking.
