@@ -4,7 +4,7 @@
 
 This repo hosts a hands-on tutorial on using the excellent [`pytest`](https://docs.pytest.org/en/latest/) library to write test suites that support your code.
 
-Tutorial development is still in-progress as of this latest README commit.
+Tutorial development is still very much **in-progress** as of this latest README commit.
 
 There is a companion slide deck, also under construction, which can be found here: [https://slides.com/rachhouse/pytest](https://slides.com/rachhouse/pytest)
 
